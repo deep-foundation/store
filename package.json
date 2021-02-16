@@ -21,7 +21,6 @@
   "scripts": {
     "build": "npx tsc --project tsconfig.json",
     "unbuild": "rm -f ./*.js && rm -f ./*.js.map",
-    "lint": "npx tslint -c tslint.json --project tsconfig.json",
     "npm-publish": "npm run build && npm publish && npm run unbuild"
   },
   "devDependencies": {
