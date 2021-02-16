@@ -1,14 +1,16 @@
 {
   "name": "example",
-  "version": "0.0.0",
+  "version": "0.0.28",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "export": "next export",
+    "start": "next start",
+    "gh-pages": "npm run build && npm run export && rm -rf ../store-gh-pages/* && mv ./out/* ../store-gh-pages/ && rm -rf out"
   },
   "dependencies": {
-    "@deepcase/store": "^0.0.26",
+    "@deepcase/store": "^0.0.28",
     "next": "10.0.7",
     "react": "17.0.1",
     "react-dom": "17.0.1"
