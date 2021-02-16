@@ -17,16 +17,6 @@
     ],
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "isolatedModules": true,
-    "outDir": "./"
+    "isolatedModules": true
   },
-  "exclude": [
-    "./node_modules",
-    "./.next",
-    "./.build",
-    "./.export"
-  ],
-  "include": [
-    "./"
-  ]
 }

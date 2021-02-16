@@ -33,7 +33,9 @@ import { CapacitorStoreProvider, useCapacitorStore } from '@deepcase/store/capac
 <QueryStoreProvider>
   <CookiesStoreProvider>
     <LocalStoreProvider>
-      <CapacitorStoreProvider fetchInterval={5000}>
+      <CapacitorStoreProvider
+        fetchInterval={5000} {/* optional, disabled by default, need to support catching not @deepcase/store based capacitor store changes. */}
+      >
         <Content/>
       </CapacitorStoreProvider>
     </LocalStoreProvider>
