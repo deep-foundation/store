@@ -6,7 +6,7 @@
     "sourceMap": true,
     "noImplicitAny": false,
     "removeComments": true,
-    "jsx": "react",
+    "jsx": "preserve",
     "module": "commonjs",
     "moduleResolution": "node",
     "target": "es2015",
@@ -18,15 +18,17 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "outDir": "./"
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true
   },
-  "exclude": [
-    "./node_modules",
-    "./.next",
-    "./.build",
-    "./.export"
-  ],
   "include": [
-    "./"
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }
