@@ -1,8 +1,9 @@
 {
   "name": "@deepcase/store",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "license": "ISC",
   "author": "Ivan S Glazunov <ivansglazunov@gmail.com>",
+  "homepage": "https://github.com/deepcase/store",
   "repository": {
     "type": "git",
     "url": "ssh://git@github.com/deepcase/store.git"
@@ -38,9 +39,9 @@
     "typescript": "^3.9.7"
   },
   "peerDependencies": {
+    "@capacitor/core": "^2.3.0",
     "next": "^9.4.4",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "@capacitor/core": "^2.3.0"
+    "react-dom": "^16.13.1"
   }
 }

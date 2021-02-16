@@ -15,7 +15,7 @@ export const CapacitorStoreContext = createContext(defaultContext);
 export const CapacitorStoreProvider = ({
   context = CapacitorStoreContext,
   children,
-  fetchInterval = 5000,
+  fetchInterval = 0,
 }: {
   context?: Context<IStoreContext>;
   children?: ReactNode;
@@ -69,7 +69,7 @@ export const CapacitorStoreProvider = ({
             if (typeof(valueParsed) === 'undefined' || isNull(valueParsed)) setState(defaultValue);
             else setState(valueParsed);
           };
-          intervalRef.current = setInterval(() => getStateRef.current(), fetchInterval);
+          if (fetchInterval) intervalRef.current = setInterval(() => getStateRef.current(), fetchInterval);
           capacitorStorageEvent.on(key, fn);
           return () => {
             clearInterval(intervalRef.current);
