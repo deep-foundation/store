@@ -1,6 +1,6 @@
 {
   "name": "@deepcase/store",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "license": "ISC",
   "author": "Ivan S Glazunov <ivansglazunov@gmail.com>",
   "homepage": "https://github.com/deepcase/store",
@@ -23,7 +23,7 @@
     "build": "npx tsc --project tsconfig.json",
     "unbuild": "rm -f ./*.js && rm -f ./*.js.map",
     "lint": "npx tslint -c tslint.json --project tsconfig.json",
-    "publish": "npm run build && npm publish && npm run unbuild"
+    "npm-publish": "npm run build && npm publish && npm run unbuild"
   },
   "devDependencies": {
     "@capacitor/core": "^2.3.0",
@@ -39,9 +39,9 @@
     "typescript": "^3.9.7"
   },
   "peerDependencies": {
-    "@capacitor/core": "^2.3.0",
-    "next": "^9.4.4",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "@capacitor/core": "*",
+    "next": "*",
+    "react": "*",
+    "react-dom": "*"
   }
 }
