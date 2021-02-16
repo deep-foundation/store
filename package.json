@@ -9,7 +9,6 @@
     "url": "ssh://git@github.com/deepcase/store.git"
   },
   "pre-commit": [
-    "lint",
     "build"
   ],
   "description": "",
@@ -33,9 +32,6 @@
     "@types/react-dom": "^16.9.8",
     "next": "^9.4.4",
     "pre-commit": "^1.2.2",
-    "tslint": "^6.1.2",
-    "tslint-config-airbnb": "^5.11.2",
-    "tslint-eslint-rules": "^5.4.0",
     "typescript": "^3.9.7"
   },
   "peerDependencies": {
