@@ -1,8 +1,11 @@
 import React, { Context, ReactNode, useState, createContext, useEffect } from 'react';
 import { EventEmitter } from 'events';
 import { isNull } from 'lodash';
+import Debug from 'debug';
 
 import { IStoreContext, defaultContext, useStore } from './store';
+
+const debug = Debug('deepcase:store:local');
 
 const localStorageEvent = new EventEmitter();
 
@@ -23,7 +26,9 @@ export const LocalStoreProvider = ({
       const [value, _setValue] = useState<string>(typeof(localStorage) === 'undefined' ? JSON.stringify(defaultValue) : (localStorage.hasOwnProperty(key) ? localStorage.getItem(key) : JSON.stringify(defaultValue)));
       useEffect(
         () => {
-          if (!localStorage.hasOwnProperty(key)) {
+          const hasOwnProperty = localStorage.hasOwnProperty(key);
+          debug('init', { key, defaultValue, hasOwnProperty });
+          if (!hasOwnProperty) {
             const json = JSON.stringify(defaultValue);
             localStorage.setItem(key, json);
             _setValue(json);
@@ -41,12 +46,14 @@ export const LocalStoreProvider = ({
         [],
       );
       const [setValue] = useState(() => (value) => {
+        debug('setValue', { key, defaultValue, value });
         const json = JSON.stringify(value);
         localStorage.setItem(key, json);
         _setValue(json);
         localStorageEvent.emit(key, json);
       });
       const [unsetValue] = useState(() => () => {
+        debug('unsetValue', { key, defaultValue });
         localStorage.removeItem(key);
         localStorageEvent.emit(key, defaultValue);
       });

@@ -5,7 +5,7 @@ import Debug from 'debug';
 
 import { IStoreContext, defaultContext, useStore } from './store';
 
-const debug = Debug('deepcase:use-store:cookie');
+const debug = Debug('deepcase:store:cookie');
 
 export const CookiesStoreContext = createContext(defaultContext);
 
@@ -45,8 +45,14 @@ export const CookiesStoreProviderCore = ({
       defaultValue: T,
     ): [T, (value: T) => any, () => any] {
       const [cookie, setCookie, removeCookie] = useCookies([key]);
-      const [setValue] = useState(() => value => setCookie(key, { value }, options));
-      const [unsetValue] = useState(() => () => removeCookie(key, options));
+      const [setValue] = useState(() => (value) => {
+        debug('setValue', { key, defaultValue, value, options });
+        return setCookie(key, { value }, options);
+      });
+      const [unsetValue] = useState(() => () => {
+        debug('unsetValue', { key, defaultValue, options });
+        return removeCookie(key, options);
+      });
       let defaultCookie;
       try {
         defaultCookie = defaultCookies && defaultCookies[key] && typeof(defaultCookies[key]) === 'string' ? JSON.parse(defaultCookies[key]).value : defaultCookies[key];
