@@ -1,5 +1,7 @@
 # deepcase store
 
+[![npm version](https://badge.fury.io/js/%40deepcase%2Fstore.svg)](https://badge.fury.io/js/%40deepcase%2Fstore) [![example](https://badgen.net/badge/example/gh-pages/gray)](https://deepcase.github.io/store/) [![develop deepcase](https://badgen.net/badge/develop/deepcase)](https://github.com/deepcase/deepcase)
+
 ## interface
 
 ```js
