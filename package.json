@@ -19,9 +19,9 @@
     "universal-cookie": "^4.0.3"
   },
   "scripts": {
-    "build": "npx tsc --project tsconfig.json",
-    "unbuild": "rm -f ./*.js && rm -f ./*.js.map",
-    "npm-publish": "npm run build && npm publish && npm run unbuild"
+    "package:build": "npx tsc --project tsconfig.json",
+    "package:unbuild": "rm -f ./*.js && rm -f ./*.js.map",
+    "package:publish": "npm run build && npm publish && npm run unbuild"
   },
   "devDependencies": {
     "@capacitor/core": "^2.3.0",
