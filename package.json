@@ -1,6 +1,6 @@
 {
   "name": "@deepcase/store",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "license": "ISC",
   "author": "Ivan S Glazunov <ivansglazunov@gmail.com>",
   "homepage": "https://github.com/deepcase/store",
@@ -21,7 +21,7 @@
   "scripts": {
     "package:build": "npx tsc --project tsconfig.json",
     "package:unbuild": "rm -f ./*.js && rm -f ./*.js.map",
-    "package:publish": "npm run build && npm publish && npm run unbuild"
+    "package:publish": "npm run package:build && npm publish && npm run package:unbuild"
   },
   "devDependencies": {
     "@capacitor/core": "^2.3.0",
