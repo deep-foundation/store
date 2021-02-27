@@ -20,8 +20,8 @@
   },
   "scripts": {
     "package:build": "npx tsc --project tsconfig.json",
-    "package:unbuild": "rm -f ./*.js; rm -f ./*.js.map",
-    "package:publish": "npm run package:build; npm publish; npm run package:unbuild"
+    "package:unbuild": "rm -f ./*.js; rm -f ./*.js.map; rm -f ./*.d.ts",
+    "package:publish": "npm run package:build; npm publish --access public; npm run package:unbuild"
   },
   "devDependencies": {
     "@capacitor/core": "^2.3.0",
