@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
+import random from 'lodash/random';
 
 import { QueryStoreProvider, useQueryStore } from '@deepcase/store/query';
 import { CookiesStoreProvider, useCookiesStore } from '@deepcase/store/cookies';
@@ -25,6 +26,7 @@ const counters = {
   contextual1Listener: 0,
   contextual2: 0,
   contextual2Listener: 0,
+  seq: 0,
 };
 export const ContentQuery = React.memo<any>(function ContentQuery() {
   const [value, setValue, unsetValue] = useQueryStore('demo', 5);
@@ -161,6 +163,63 @@ export const ContentContextual2 = React.memo<any>(function ContentContextual2() 
   </>;
 });
 
+export const ContentSyncSeq = React.memo<any>(function ContentSyncSeq() {
+  const [seq, setSeq] = useState([]);
+  const [seqQuery1, setSeqQuery1, unsetSeqQuery1] = useQueryStore('seqQuery1', random(1,9999));
+  const [seqQuery2, setSeqQuery2, unsetSeqQuery2] = useQueryStore('seqQuery2', random(1,9999));
+  const [seqLocal1, setSeqLocal1, unsetSeqLocal1] = useLocalStore('seqLocal1', random(1,9999));
+  const [seqLocal2, setSeqLocal2, unsetSeqLocal2] = useLocalStore('seqLocal2', random(1,9999));
+  const [seqCookies1, setSeqCookies1, unsetSeqCookies1] = useCookiesStore('seqCookies1', random(1,9999));
+  const [seqCookies2, setSeqCookies2, unsetSeqCookies2] = useCookiesStore('seqCookies2', random(1,9999));
+  const sets = { setSeqQuery1, setSeqQuery2, setSeqLocal1, setSeqLocal2, setSeqCookies1, setSeqCookies2 };
+  return <>
+    <b>synchronous state change queue</b>
+    <div>
+      <div><i>rerendered counter: {counters.seq++}</i></div>
+      <div>const [seqQuery1, setSeqQuery1, unsetSeqQuery1] = useQueryStore('seqQuery1', random(1,9999));</div>
+      <div>const [seqQuery2, setSeqQuery2, unsetSeqQuery2] = useQueryStore('seqQuery2', random(1,9999));</div>
+      <div>const [seqLocal1, setSeqLocal1, unsetSeqLocal1] = useLocalStore('seqLocal1', random(1,9999));</div>
+      <div>const [seqLocal2, setSeqLocal2, unsetSeqLocal2] = useLocalStore('seqLocal2', random(1,9999));</div>
+      <div>const [seqCookies1, setSeqCookies1, unsetSeqCookies1] = useCookiesStore('seqCookies1', random(1,9999));</div>
+      <div>const [seqCookies2, setSeqCookies2, unsetSeqCookies2] = useCookiesStore('seqCookies2', random(1,9999));</div>
+      <div>seqQuery1 == {seqQuery1}</div>
+      <div>seqQuery2 == {seqQuery2}</div>
+      <div>seqLocal1 == {seqLocal1}</div>
+      <div>seqLocal2 == {seqLocal2}</div>
+      <div>seqCookies1 == {seqCookies1}</div>
+      <div>seqCookies2 == {seqCookies2}</div>
+      <button onClick={() => {
+        setSeq([ ...seq, { key: 'setSeqQuery1', value: random(1,9999) } ]);
+      }}>add setSeqQuery1(random(1,9999))</button>
+      <button onClick={() => {
+        setSeq([ ...seq, { key: 'setSeqQuery2', value: random(1,9999) } ]);
+      }}>add setSeqQuery2(random(1,9999))</button>
+      <button onClick={() => {
+        setSeq([ ...seq, { key: 'setSeqLocal1', value: random(1,9999) } ]);
+      }}>add setSeqLocal1(random(1,9999))</button>
+      <button onClick={() => {
+        setSeq([ ...seq, { key: 'setSeqLocal2', value: random(1,9999) } ]);
+      }}>add setSeqLocal2(random(1,9999))</button>
+      <button onClick={() => {
+        setSeq([ ...seq, { key: 'setSeqCookies1', value: random(1,9999) } ]);
+      }}>add setSeqCookies1(random(1,9999))</button>
+      <button onClick={() => {
+        setSeq([ ...seq, { key: 'setSeqCookies2', value: random(1,9999) } ]);
+      }}>add setSeqCookies2(random(1,9999))</button>
+    </div>
+    <div><b>script to exec:</b></div>
+    <div>{seq.map((s,i) => <div key={i}>{s.key}({s.value});</div>)}</div>
+    <button onClick={() => {
+      for (let s in seq) {
+        sets[seq[s].key](seq[s].value);
+      }
+    }}>exec script</button>
+    <button onClick={() => {
+      setSeq([]);
+    }}>clear script</button>
+  </>;
+});
+
 export const Content = React.memo<any>(function Content() {
   return <>
     <b>{pckg.name}@{pckg.version}</b>
@@ -190,6 +249,8 @@ export const Content = React.memo<any>(function Content() {
     <ContentToken/>
     <hr/>
     <ContentContextual1/>
+    <hr/>
+    <ContentSyncSeq/>
   </>;
 });
 
