@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { Context, ReactNode, useState, createContext, useRef, useEffect } from 'react';
+import React, { Context, ReactNode, useState, createContext, useRef, useEffect, useMemo } from 'react';
 import Debug from 'debug';
 
 import { IStoreContext, defaultContext, useStore } from './store';
@@ -17,45 +17,60 @@ export const QueryStoreProvider = ({
   context?: Context<IStoreContext>;
   children?: ReactNode;
 }) => {
+  const router = useRouter();
+  const { query, pathname, push } = router || fakeRouter;
+
+  const _routerRef = useRef<any>({});
+  _routerRef.current = { query, pathname };
+
   const _renderingRef = useRef({});
+  const _timeoutRef = useRef<any>();
+  useEffect(() => {
+    _renderingRef.current = {};
+  }, [router?.query]);
+
   const [useStore] = useState(() => {
     return function useStore<T extends any>(
       key: string,
       defaultValue: T,
     ): [T, (value: T) => any, () => any] {
       const router = useRouter();
-      const { query, pathname, push } = router || fakeRouter;
-
-      useEffect(() => {
-        _renderingRef.current = {};
-      }, [router?.query]);
-
+      const { query } = router || fakeRouter;
+      const memoDefaultValue = useMemo(() => defaultValue, []);
       const setValue = (value) => {
         try {
-          push({
-            pathname,
-            query: {
-              ...query,
-              ..._renderingRef.current,
-              [key]: JSON.stringify(value),
-            },
-          });
+          clearTimeout(_timeoutRef.current);
+          _timeoutRef.current = setTimeout(() => {
+            push({
+              pathname: _routerRef.current?.pathname,
+              query: {
+                ..._routerRef.current?.query,
+                ..._renderingRef.current,
+                [key]: JSON.stringify(value),
+              },
+            });
+          }, 0);
           _renderingRef.current[key] = JSON.stringify(value);
         } catch (error) {
-          debug('setStore:error', { error, key, defaultValue, value });
+          debug('setStore:error', { error, key, defaultValue: memoDefaultValue, value });
         }
       };
 
       const [unsetValue] = useState(() => () => {
         try {
           if (query[key]) delete query[key];
-          push({
-            pathname,
-            query: {
-              ...query,
+          clearTimeout(_timeoutRef.current);
+          _timeoutRef.current = setTimeout(() => {
+            const _q = {
+              ..._routerRef.current?.query,
               ..._renderingRef.current,
-            }
-          });
+            };
+            delete _q[key];
+            push({
+              pathname: _routerRef.current?.pathname,
+              query: _q,
+            });
+          }, 0);
           _renderingRef.current[key] = undefined;
         } catch (error) {
           debug('unsetStore:error', { error, key });
@@ -66,9 +81,9 @@ export const QueryStoreProvider = ({
       try {
         value = query && query[key] && JSON.parse(query[key]);
       } catch (error) {
-        debug('value:error', { error, key, defaultValue, query });
+        debug('value:error', { error, key, defaultValue: memoDefaultValue, query });
       }
-      return [value || defaultValue, setValue, unsetValue];
+      return [value || memoDefaultValue, setValue, unsetValue];
     };
   });
 

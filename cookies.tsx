@@ -1,4 +1,4 @@
-import React, { Context, ReactNode, useState, createContext } from 'react';
+import React, { Context, ReactNode, useState, createContext, useMemo } from 'react';
 import { useCookies, CookiesProvider } from 'react-cookie';
 import Cookies, { Cookie, CookieSetOptions } from 'universal-cookie';
 import Debug from 'debug';
@@ -44,22 +44,23 @@ export const CookiesStoreProviderCore = ({
       key: string,
       defaultValue: T,
     ): [T, (value: T) => any, () => any] {
+      const memoDefaultValue = useMemo(() => defaultValue, []);
       const [cookie, setCookie, removeCookie] = useCookies([key]);
       const [setValue] = useState(() => (value) => {
-        debug('setValue', { key, defaultValue, value, options });
+        debug('setValue', { key, defaultValue: memoDefaultValue, value, options });
         return setCookie(key, { value }, options);
       });
       const [unsetValue] = useState(() => () => {
-        debug('unsetValue', { key, defaultValue, options });
+        debug('unsetValue', { key, defaultValue: memoDefaultValue, options });
         return removeCookie(key, options);
       });
       let defaultCookie;
       try {
         defaultCookie = defaultCookies && defaultCookies[key] && typeof(defaultCookies[key]) === 'string' ? JSON.parse(defaultCookies[key]).value : defaultCookies[key];
       } catch (error) {
-        debug('setStore:error', { error, key, defaultValue, defaultCookie: defaultCookies[key] });
+        debug('setStore:error', { error, key, defaultValue: memoDefaultValue, defaultCookie: defaultCookies[key] });
       }
-      return [(cookie[key] && cookie[key].value) || (defaultCookies && defaultCookie) || defaultValue, setValue, unsetValue];
+      return [(cookie[key] && cookie[key].value) || (defaultCookies && defaultCookie) || memoDefaultValue, setValue, unsetValue];
     };
   });
   return <context.Provider value={{ useStore }}>

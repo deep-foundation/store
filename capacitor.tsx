@@ -1,4 +1,4 @@
-import React, { Context, ReactNode, useState, useEffect, useRef, createContext } from 'react';
+import React, { Context, ReactNode, useState, useEffect, useRef, createContext, useMemo } from 'react';
 import { EventEmitter } from 'events';
 import { isEqual, isNull } from 'lodash';
 import { Storage } from '@capacitor/core';
@@ -28,16 +28,17 @@ export const CapacitorStoreProvider = ({
     ): [T, (value: T) => any, () => any] {
       const getStateRef = useRef<any>();
       const intervalRef = useRef<any>();
-      const [state, setState] = useState<T>(defaultValue);
+      const memoDefaultValue = useMemo(() => defaultValue, []);
+      const [state, setState] = useState<T>(memoDefaultValue);
       const [setValue] = useState(() => (value) => {
-        debug('setValue', { key, defaultValue, value });
+        debug('setValue', { key, defaultValue: memoDefaultValue, value });
         Storage.set({ key, value: JSON.stringify(value) }).then(() => setState(value));
         capacitorStorageEvent.emit(key, JSON.stringify(value));
       });
       const [unsetValue] = useState(() => () => {
-        debug('unsetValue', { key, defaultValue });
-        Storage.remove({ key }).then(() => setState(defaultValue));
-        capacitorStorageEvent.emit(key, defaultValue);
+        debug('unsetValue', { key, defaultValue: memoDefaultValue });
+        Storage.remove({ key }).then(() => setState(memoDefaultValue));
+        capacitorStorageEvent.emit(key, memoDefaultValue);
       });
       getStateRef.current = () => Storage.get({ key }).then(async ({ value }) => {
         const { keys } = await Storage.keys();
@@ -46,9 +47,9 @@ export const CapacitorStoreProvider = ({
           try {
             valueParsed = JSON.parse(value);
           } catch (error) {
-            debug('setStore:error', { error, key, defaultValue, value });
+            debug('setStore:error', { error, key, defaultValue: memoDefaultValue, value });
           }
-          debug('getStore', { key, defaultValue, valueParsed, value });
+          debug('getStore', { key, defaultValue: memoDefaultValue, valueParsed, value });
           if (!isEqual(valueParsed, state)) {
             if (typeof(valueParsed) === 'undefined' || isNull(value)) setState(defaultValue);
             else setState(valueParsed);
@@ -57,16 +58,16 @@ export const CapacitorStoreProvider = ({
       });
       useEffect(
         () => {
-          debug('init', { key, defaultValue });
+          debug('init', { key, defaultValue: memoDefaultValue });
           getStateRef.current();
           const fn = (value) => {
             let valueParsed;
             try {
               valueParsed = JSON.parse(value);
             } catch (error) {
-              debug('fn:error', { error, key, defaultValue, value });
+              debug('fn:error', { error, key, defaultValue: memoDefaultValue, value });
             }
-            if (typeof(valueParsed) === 'undefined' || isNull(valueParsed)) setState(defaultValue);
+            if (typeof(valueParsed) === 'undefined' || isNull(valueParsed)) setState(memoDefaultValue);
             else setState(valueParsed);
           };
           if (fetchInterval) intervalRef.current = setInterval(() => getStateRef.current(), fetchInterval);
