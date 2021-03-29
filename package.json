@@ -14,6 +14,7 @@
     "local": "npm run local-export; export $(grep -v '^#' .env | xargs); npm run dev"
   },
   "dependencies": {
+    "@capacitor/core": "^2.4.7",
     "@deepcase/store": "^0.0.32",
     "next": "10.0.7",
     "react": "17.0.1",
