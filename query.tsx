@@ -77,9 +77,9 @@ export const QueryStoreProvider = ({
         }
       });
 
-      let value: any;
+      let value: any = query?.[key];
       try {
-        value = query && query[key] && JSON.parse(query[key]);
+        value = JSON.parse(query[key]);
       } catch (error) {
         debug('value:error', { error, key, defaultValue: memoDefaultValue, query });
       }

@@ -1,6 +1,6 @@
 {
   "name": "@deepcase/store",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "license": "ISC",
   "author": "Ivan S Glazunov <ivansglazunov@gmail.com>",
   "homepage": "https://github.com/deepcase/store",
@@ -8,9 +8,6 @@
     "type": "git",
     "url": "ssh://git@github.com/deepcase/store.git"
   },
-  "pre-commit": [
-    "build"
-  ],
   "description": "",
   "dependencies": {
     "debug": "^4.1.1",
