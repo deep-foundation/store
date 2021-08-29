@@ -134,10 +134,10 @@ export interface IOptions <T>{
   (defaultValue: T): [T, (value: T) => any, () => any];
 }
 export const OptionsContext = React.createContext<IOptions<any>>((defaultValue: any) => [null, () => null, () => {}]);
-export const OptionsProvider = React.memo<any>(function OptionsProvider({ key, children }: { key: string; children: any }) {
+export const OptionsProvider = React.memo<any>(function OptionsProvider({ urlKey, children }: { urlKey: string; children: any }) {
   const useStore = React.useMemo(() => {
     return function useOptions(defualtValue) {
-      return useQueryStore(key, defualtValue);
+      return useQueryStore(urlKey, defualtValue);
     };
   }, []);
   return <OptionsContext.Provider value={useStore}>{children}</OptionsContext.Provider>
@@ -148,7 +148,7 @@ export const useOptions = function useOptions(defualtValue: any) {
 export const ContentContextual1 = React.memo<any>(function ContentContextual1() {
   return <>
     <div><i>rerendered counter: {counters.contextual1++}</i></div>
-    <OptionsProvider key={'abc'}><ContentContextual2/></OptionsProvider>
+    <OptionsProvider urlKey={'abc'}><ContentContextual2/></OptionsProvider>
   </>;
 });
 export const ContentContextual2 = React.memo<any>(function ContentContextual2() {
