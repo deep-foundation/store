@@ -1,10 +1,13 @@
 import { useRouter } from 'next/router';
 import React, { Context, ReactNode, useState, createContext, useRef, useEffect, useMemo } from 'react';
 import Debug from 'debug';
+import _ from 'lodash';
+import { EventEmitter } from 'events';
 
 import { IStoreContext, defaultContext, useStore } from './store';
 
 const debug = Debug('deepcase:store:use-store-query');
+const capacitorStorageEvent = new EventEmitter();
 
 export const QueryStoreContext = createContext(defaultContext);
 
@@ -25,18 +28,33 @@ export const QueryStoreProvider = ({
 
   const _renderingRef = useRef({});
   const _timeoutRef = useRef<any>();
+  const _cacheRef = useRef<any>();
   useEffect(() => {
     _renderingRef.current = {};
+    _.each(router?.query, (value, key) => {
+      if (!_.isEqual(value, _cacheRef?.current?.[key])) {
+        capacitorStorageEvent.emit(key, JSON.parse(value));
+      }
+    });
+    _cacheRef.current = router?.query;
   }, [router?.query]);
 
-  const [useStore] = useState(() => {
-    return function useStore<T extends any>(
+  const [useStoreValue] = useState(() => {
+    function useStore<T extends any>(
       key: string,
       defaultValue: T,
     ): [T, (value: T) => any, () => any] {
-      const router = useRouter();
-      const { query } = router || fakeRouter;
+      const [state, setState] = useState(defaultValue);
       const memoDefaultValue = useMemo(() => defaultValue, []);
+      useEffect(() => {
+        const fn = (value) => {
+          setState(value);
+        };
+        capacitorStorageEvent.on(key, fn);
+        return () => {
+          capacitorStorageEvent.off(key, fn);
+        };
+      }, []);
       const setValue = (value) => {
         try {
           clearTimeout(_timeoutRef.current);
@@ -77,17 +95,12 @@ export const QueryStoreProvider = ({
         }
       });
 
-      let value: any = query?.[key];
-      try {
-        value = JSON.parse(query[key]);
-      } catch (error) {
-        debug('value:error', { error, key, defaultValue: memoDefaultValue, query });
-      }
-      return [value || memoDefaultValue, setValue, unsetValue];
+      return [state, setValue, unsetValue];
     };
+    return { useStore };
   });
 
-  return <context.Provider value={{ useStore }}>
+  return <context.Provider value={useStoreValue}>
     {children}
   </context.Provider>;
 };
