@@ -33,7 +33,9 @@ export const QueryStoreProvider = ({
     _renderingRef.current = {};
     _.each(router?.query, (value, key) => {
       if (!_.isEqual(value, _cacheRef?.current?.[key])) {
-        capacitorStorageEvent.emit(key, JSON.parse(value));
+        try {
+          capacitorStorageEvent.emit(key, JSON.parse(value));
+        } catch(error) {}
       }
     });
     _cacheRef.current = router?.query;
@@ -57,6 +59,7 @@ export const QueryStoreProvider = ({
       }, []);
       const setValue = (value) => {
         try {
+          _renderingRef.current[key] = JSON.stringify(value);
           clearTimeout(_timeoutRef.current);
           _timeoutRef.current = setTimeout(() => {
             push({
@@ -64,11 +67,9 @@ export const QueryStoreProvider = ({
               query: {
                 ..._routerRef.current?.query,
                 ..._renderingRef.current,
-                [key]: JSON.stringify(value),
               },
             });
           }, 0);
-          _renderingRef.current[key] = JSON.stringify(value);
         } catch (error) {
           debug('setStore:error', { error, key, defaultValue: memoDefaultValue, value });
         }
