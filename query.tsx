@@ -33,9 +33,13 @@ export const QueryStoreProvider = ({
     _renderingRef.current = {};
     _.each(router?.query, (value, key) => {
       if (!_.isEqual(value, _cacheRef?.current?.[key])) {
-        try {
-          capacitorStorageEvent.emit(key, JSON.parse(value));
-        } catch(error) {}
+        if (value) {
+          try {
+            capacitorStorageEvent.emit(key, JSON.parse(value));
+          } catch(error) {}
+        } else {
+          capacitorStorageEvent.emit(key, undefined);
+        }
       }
     });
     _cacheRef.current = router?.query;
