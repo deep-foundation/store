@@ -34,7 +34,7 @@ export const QueryStoreProvider = ({
     if (query && query.hasOwnProperty(key)) {
       try {
         return JSON.parse(query[key]);
-      } catch(error) {}
+      } catch(error) { return query[key]; }
     }
     return defaultValue;
   };
@@ -45,7 +45,9 @@ export const QueryStoreProvider = ({
         if (value) {
           try {
             capacitorStorageEvent.emit(key, JSON.parse(value));
-          } catch(error) {}
+          } catch(error) {
+            capacitorStorageEvent.emit(key, value);
+          }
         } else {
           capacitorStorageEvent.emit(key, undefined);
         }
