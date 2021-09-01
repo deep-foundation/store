@@ -30,7 +30,14 @@ export const QueryStoreProvider = ({
   const _timeoutRef = useRef<any>();
   const _cacheRef = useRef<any>();
   const _getDefaultValue = useRef<any>();
-  _getDefaultValue.current = (key, defaultValue) => query.hasOwnProperty(key) ? query[key] : defaultValue;
+  _getDefaultValue.current = (key, defaultValue) => {
+    if (query && query.hasOwnProperty(key)) {
+      try {
+        return JSON.parse(query[key]);
+      } catch(error) {}
+    }
+    return defaultValue;
+  };
   useEffect(() => {
     _renderingRef.current = {};
     _.each(router?.query, (value, key) => {
