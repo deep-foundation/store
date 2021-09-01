@@ -29,6 +29,8 @@ export const QueryStoreProvider = ({
   const _renderingRef = useRef({});
   const _timeoutRef = useRef<any>();
   const _cacheRef = useRef<any>();
+  const _getDefaultValue = useRef<any>();
+  _getDefaultValue.current = (key, defaultValue) => query.hasOwnProperty(key) ? query[key] : defaultValue;
   useEffect(() => {
     _renderingRef.current = {};
     _.each(router?.query, (value, key) => {
@@ -50,7 +52,7 @@ export const QueryStoreProvider = ({
       key: string,
       defaultValue: T,
     ): [T, (value: T) => any, () => any] {
-      const [state, setState] = useState(defaultValue);
+      const [state, setState] = useState(_getDefaultValue.current(key, defaultValue));
       const memoDefaultValue = useMemo(() => defaultValue, []);
       useEffect(() => {
         const fn = (value) => {
