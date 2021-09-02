@@ -8,6 +8,7 @@ import { IStoreContext, defaultContext, useStore } from './store';
 
 const debug = Debug('deepcase:store:use-store-query');
 const capacitorStorageEvent = new EventEmitter();
+capacitorStorageEvent.setMaxListeners(0);
 
 export const QueryStoreContext = createContext(defaultContext);
 
