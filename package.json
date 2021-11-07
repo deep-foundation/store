@@ -1,12 +1,12 @@
 {
-  "name": "@deepcase/store",
-  "version": "0.0.42",
+  "name": "@deep-foundation/store",
+  "version": "0.0.1",
   "license": "ISC",
   "author": "Ivan S Glazunov <ivansglazunov@gmail.com>",
-  "homepage": "https://github.com/deepcase/store",
+  "homepage": "https://github.com/deep-foundation/store",
   "repository": {
     "type": "git",
-    "url": "ssh://git@github.com/deepcase/store.git"
+    "url": "ssh://git@github.com/deep-foundation/store.git"
   },
   "description": "",
   "dependencies": {
