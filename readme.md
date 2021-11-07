@@ -1,6 +1,6 @@
-# deepcase store
+# deep-foundation store
 
-[![npm version](https://badge.fury.io/js/%40deepcase%2Fstore.svg)](https://badge.fury.io/js/%40deepcase%2Fstore) [![example](https://badgen.net/badge/example/gh-pages/gray)](https://deepcase.github.io/store/)
+[![npm version](https://badge.fury.io/js/%40deep-foundation%2Fstore.svg)](https://badge.fury.io/js/%40deep-foundation%2Fstore) [![example](https://badgen.net/badge/example/gh-pages/gray)](https://deep-foundation.github.io/store/)
 
 ## interface
 
@@ -25,10 +25,10 @@ const [value, setValue, unsetValue]: [Type, (value: Type) => any, () => any] = u
 > To use any hook, be sure to use the appropriate provider higher in the react tree.
 
 ```tsx
-import { QueryStoreProvider, useQueryStore } from '@deepcase/store/query';
-import { CookiesStoreProvider, useCookiesStore } from '@deepcase/store/cookies';
-import { LocalStoreProvider, useLocalStore } from '@deepcase/store/local';
-import { CapacitorStoreProvider, useCapacitorStore } from '@deepcase/store/capacitor';
+import { QueryStoreProvider, useQueryStore } from '@deep-foundation/store/query';
+import { CookiesStoreProvider, useCookiesStore } from '@deep-foundation/store/cookies';
+import { LocalStoreProvider, useLocalStore } from '@deep-foundation/store/local';
+import { CapacitorStoreProvider, useCapacitorStore } from '@deep-foundation/store/capacitor';
 ```
 
 ```tsx
@@ -36,7 +36,7 @@ import { CapacitorStoreProvider, useCapacitorStore } from '@deepcase/store/capac
   <CookiesStoreProvider>
     <LocalStoreProvider>
       <CapacitorStoreProvider
-        fetchInterval={5000} {/* optional, disabled by default, need to support catching not @deepcase/store based capacitor store changes. */}
+        fetchInterval={5000} {/* optional, disabled by default, need to support catching not @deep-foundation/store based capacitor store changes. */}
       >
         <Content/>
       </CapacitorStoreProvider>
@@ -101,7 +101,7 @@ const [token, setToken] = useToken();
 
 ```ts
 // stores.tsx
-import { IUseStore } from '@deepcase/store/store';
+import { IUseStore } from '@deep-foundation/store/store';
 export const OptionsContext = React.createContext<IUseStore | void>();
 export function OptionsProvider({ key, children }: { key: string; children: any }) {
   const useStore = React.useMemo(() => {

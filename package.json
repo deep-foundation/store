@@ -1,7 +1,7 @@
 {
   "name": "@deep-foundation/store",
-  "version": "0.0.1",
-  "license": "ISC",
+  "version": "0.0.3",
+  "license": "MIT",
   "author": "Ivan S Glazunov <ivansglazunov@gmail.com>",
   "homepage": "https://github.com/deep-foundation/store",
   "repository": {
