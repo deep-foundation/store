@@ -6,7 +6,7 @@ import Debug from 'debug';
 
 import { IStoreContext, defaultContext, useStore } from './store';
 
-const debug = Debug('deepcase:store:capacitor');
+const debug = Debug('store:capacitor');
 
 const capacitorStorageEvent = new EventEmitter();
 

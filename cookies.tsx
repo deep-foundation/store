@@ -5,7 +5,7 @@ import Debug from 'debug';
 
 import { IStoreContext, defaultContext, useStore } from './store';
 
-const debug = Debug('deepcase:store:cookie');
+const debug = Debug('store:cookie');
 
 export const CookiesStoreContext = createContext(defaultContext);
 

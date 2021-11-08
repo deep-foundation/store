@@ -5,7 +5,7 @@ import Debug from 'debug';
 
 import { IStoreContext, defaultContext, useStore } from './store';
 
-const debug = Debug('deepcase:store:local');
+const debug = Debug('store:local');
 
 const localStorageEvent = new EventEmitter();
 
