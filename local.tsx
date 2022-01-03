@@ -11,6 +11,11 @@ const localStorageEvent = new EventEmitter();
 
 export const LocalContext = createContext(defaultContext);
 
+const stringify = (item) => {
+  if (typeof(item) === 'undefined' || isNull(item)) return '';
+  return JSON.stringify(item);
+};
+
 export const LocalStoreProvider = ({
   context = LocalContext,
   children,
@@ -24,19 +29,19 @@ export const LocalStoreProvider = ({
       defaultValue: T,
     ): [T, (value: T) => any, () => any] {
       const memoDefaultValue = useMemo(() => defaultValue, []);
-      const [value, _setValue] = useState<string>(typeof(localStorage) === 'undefined' ? JSON.stringify(memoDefaultValue) : (localStorage.hasOwnProperty(key) ? localStorage.getItem(key) : JSON.stringify(memoDefaultValue)));
+      const [value, _setValue] = useState<string>(typeof(localStorage) === 'undefined' ? stringify(memoDefaultValue) : (localStorage.hasOwnProperty(key) ? localStorage.getItem(key) : stringify(memoDefaultValue)));
       useEffect(
         () => {
           const hasOwnProperty = localStorage.hasOwnProperty(key);
           debug('init', { key, defaultValue: memoDefaultValue, hasOwnProperty });
           if (!hasOwnProperty) {
-            const json = JSON.stringify(memoDefaultValue);
+            const json = stringify(memoDefaultValue);
             localStorage.setItem(key, json);
             _setValue(json);
           }
           const fn = (value) => {
             const item = localStorage.getItem(key);
-            if (typeof(item) === 'undefined' || isNull(item)) _setValue(JSON.stringify(memoDefaultValue));
+            if (typeof(item) === 'undefined' || isNull(item)) _setValue(stringify(memoDefaultValue));
             else _setValue(value);
           };
           localStorageEvent.on(key, fn);
@@ -48,7 +53,7 @@ export const LocalStoreProvider = ({
       );
       const [setValue] = useState(() => (value) => {
         debug('setValue', { key, defaultValue: memoDefaultValue, value });
-        const json = JSON.stringify(value);
+        const json = stringify(value);
         localStorage.setItem(key, json);
         _setValue(json);
         localStorageEvent.emit(key, json);
