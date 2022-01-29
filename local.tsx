@@ -63,7 +63,14 @@ export const LocalStoreProvider = ({
         localStorage.removeItem(key);
         localStorageEvent.emit(key, memoDefaultValue);
       });
-      return [JSON.parse(value), setValue, unsetValue];
+      const _value = useMemo(() => {
+        try {
+          return JSON.parse(value);
+        } catch(error) {
+          return undefined;
+        }
+      }, [value]);
+      return [_value, setValue, unsetValue];
     };
   });
 
