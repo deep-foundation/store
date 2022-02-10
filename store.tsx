@@ -1,7 +1,11 @@
 import { createContext, Context, useContext } from 'react';
 
+export interface IUseStoreSetHandler<T> {
+  (oldValue: T): T;
+};
+
 export interface IUseStore <T>{
-  (key: string, defaultValue: T): [T, (value: T) => any, () => any];
+  (key: string, defaultValue: T): [T, (value: (T | IUseStoreSetHandler<T>)) => any, () => any];
 }
 
 export interface IStoreContext<T = any> {

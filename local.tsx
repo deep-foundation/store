@@ -1,4 +1,4 @@
-import React, { Context, ReactNode, useState, createContext, useEffect, useMemo } from 'react';
+import React, { Context, ReactNode, useState, createContext, useEffect, useMemo, useRef } from 'react';
 import { EventEmitter } from 'events';
 import { isNull } from 'lodash';
 import Debug from 'debug';
@@ -30,6 +30,10 @@ export const LocalStoreProvider = ({
     ): [T, (value: T) => any, () => any] {
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [value, _setValue] = useState<string>(typeof(localStorage) === 'undefined' ? stringify(memoDefaultValue) : (localStorage.hasOwnProperty(key) ? localStorage.getItem(key) : stringify(memoDefaultValue)));
+
+      const stateRef = useRef<any>();
+      stateRef.current = value;
+
       useEffect(
         () => {
           const hasOwnProperty = localStorage.hasOwnProperty(key);
@@ -53,7 +57,8 @@ export const LocalStoreProvider = ({
       );
       const [setValue] = useState(() => (value) => {
         debug('setValue', { key, defaultValue: memoDefaultValue, value });
-        const json = stringify(value);
+        const _value = typeof(value) === 'function' ? value(stateRef.current) : value;
+        const json = stringify(_value);
         localStorage.setItem(key, json);
         _setValue(json);
         localStorageEvent.emit(key, json);

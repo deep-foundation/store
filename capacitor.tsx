@@ -30,10 +30,15 @@ export const CapacitorStoreProvider = ({
       const intervalRef = useRef<any>();
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [state, setState] = useState<T>(memoDefaultValue);
+
+      const stateRef = useRef<any>();
+      stateRef.current = state;
+
       const [setValue] = useState(() => (value) => {
-        debug('setValue', { key, defaultValue: memoDefaultValue, value });
-        Storage.set({ key, value: JSON.stringify(value) }).then(() => setState(value));
-        capacitorStorageEvent.emit(key, JSON.stringify(value));
+        const _value = typeof(value) === 'function' ? value(stateRef.current) : value;
+        debug('setValue', { key, defaultValue: memoDefaultValue, value: _value });
+        Storage.set({ key, value: JSON.stringify(_value) }).then(() => setState(_value));
+        capacitorStorageEvent.emit(key, JSON.stringify(_value));
       });
       const [unsetValue] = useState(() => () => {
         debug('unsetValue', { key, defaultValue: memoDefaultValue });

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import React, { Context, ReactNode, useState, createContext, useRef, useEffect, useMemo } from 'react';
+import React, { Context, ReactNode, useState, createContext, useRef, useEffect, useMemo, useCallback } from 'react';
 import Debug from 'debug';
 import _ from 'lodash';
 import { EventEmitter } from 'events';
@@ -63,6 +63,10 @@ export const QueryStoreProvider = ({
       defaultValue: T,
     ): [T, (value: T) => any, () => any] {
       const [state, setState] = useState(_getDefaultValue.current(key, defaultValue));
+
+      const stateRef = useRef<any>();
+      stateRef.current = state;
+
       const memoDefaultValue = useMemo(() => defaultValue, []);
       useEffect(() => {
         const fn = (value) => {
@@ -73,9 +77,10 @@ export const QueryStoreProvider = ({
           capacitorStorageEvent.off(key, fn);
         };
       }, []);
-      const setValue = (value) => {
+      const setValue = useCallback((value) => {
+        const _value = typeof(value) === 'function' ? value(stateRef.current) : value;
         try {
-          _renderingRef.current[key] = JSON.stringify(value);
+          _renderingRef.current[key] = JSON.stringify(_value);
           clearTimeout(_timeoutRef.current);
           _timeoutRef.current = setTimeout(() => {
             push({
@@ -87,9 +92,9 @@ export const QueryStoreProvider = ({
             });
           }, 0);
         } catch (error) {
-          debug('setStore:error', { error, key, defaultValue: memoDefaultValue, value });
+          debug('setStore:error', { error, key, defaultValue: memoDefaultValue, value: _value });
         }
-      };
+      }, []);
 
       const [unsetValue] = useState(() => () => {
         try {
