@@ -45,6 +45,7 @@ export const QueryStoreProvider = ({
       if (!_.isEqual(value, _cacheRef?.current?.[key])) {
         if (value) {
           try {
+            if (typeof value !== 'string') throw new Error('value is not string');
             capacitorStorageEvent.emit(key, JSON.parse(value));
           } catch(error) {
             capacitorStorageEvent.emit(key, value);
