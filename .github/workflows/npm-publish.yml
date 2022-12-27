@@ -11,3 +11,5 @@ on:
 jobs:
   main:
     uses: deep-foundation/workflows/.github/workflows/npm-publish.yml@main
+    with:
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
