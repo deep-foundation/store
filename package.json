@@ -1,4 +1,4 @@
-{  
+{
   "name": "@deep-foundation/store",
   "version": "0.0.9",
   "license": "MIT",
@@ -12,7 +12,9 @@
   "dependencies": {
     "debug": "^4.1.1",
     "lodash": "^4.17.19",
+    "react": "^16.14.0",
     "react-cookie": "^4.0.3",
+    "react-dom": "^16.14.0",
     "universal-cookie": "^4.0.3"
   },
   "scripts": {
