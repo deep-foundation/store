@@ -1,7 +1,7 @@
 import React, { Context, ReactNode, useState, useEffect, useRef, createContext, useMemo } from 'react';
 import { EventEmitter } from 'events';
 import { isEqual, isNull } from 'lodash';
-import { Preferences } from '@capacitor/preferences';
+import { Storage } from '@capacitor/core';
 import Debug from 'debug';
 
 import { IStoreContext, defaultContext, useStore } from './store';
@@ -37,16 +37,16 @@ export const CapacitorStoreProvider = ({
       const [setValue] = useState(() => (value) => {
         const _value = typeof(value) === 'function' ? value(stateRef.current) : value;
         debug('setValue', { key, defaultValue: memoDefaultValue, value: _value });
-        Preferences.set({ key, value: JSON.stringify(_value) }).then(() => setState(_value));
+        Storage.set({ key, value: JSON.stringify(_value) }).then(() => setState(_value));
         capacitorStorageEvent.emit(key, JSON.stringify(_value));
       });
       const [unsetValue] = useState(() => () => {
         debug('unsetValue', { key, defaultValue: memoDefaultValue });
-        Preferences.remove({ key }).then(() => setState(memoDefaultValue));
+        Storage.remove({ key }).then(() => setState(memoDefaultValue));
         capacitorStorageEvent.emit(key, memoDefaultValue);
       });
-      getStateRef.current = () => Preferences.get({ key }).then(async ({ value }) => {
-        const { keys } = await Preferences.keys();
+      getStateRef.current = () => Storage.get({ key }).then(async ({ value }) => {
+        const { keys } = await Storage.keys();
         if (!!~keys.indexOf(key)) {
           let valueParsed: any;
           try {
