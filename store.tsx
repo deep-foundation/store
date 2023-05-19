@@ -24,7 +24,7 @@ export function useStore<T>(
   key: string,
   defaultValue: T,
   context: Context<IStoreContext> = StoreContext,
-): [T, (value: T) => any, () => any] {
+): [T, (value: T) => T, () => T] {
   const { useStore } = useContext(context);
   return useStore(key, defaultValue);
 }
