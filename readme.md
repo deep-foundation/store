@@ -53,7 +53,7 @@ const [cookie, setCookie] = useCookiesStore('demo', 5);
 const [local, setLocal] = useLocalStore('demo', 5);
 // localStorage.getItem('demo') // 5
 const [capacitor, setCapacitor] = useCapacitorStore('demo', 5);
-// await Storage.get('demo') // { value: 5 }
+// await Preferences.get('demo') // { value: 5 }
 ```
 
 ## compatibility
