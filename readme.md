@@ -1,6 +1,12 @@
 # deep-foundation store
 
-[![npm version](https://badge.fury.io/js/%40deep-foundation%2Fstore.svg)](https://badge.fury.io/js/%40deep-foundation%2Fstore) [![example](https://badgen.net/badge/example/gh-pages/gray)](https://deep-foundation.github.io/store/)
+[![npm](https://img.shields.io/npm/v/@deep-foundation/store.svg)](https://www.npmjs.com/package/@deep-foundation/store)
+[![Gitpod](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/deep-foundation/store) 
+[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label&color=purple)](https://discord.gg/deep-foundation)
+
+# Usage
+## Library
+See [Documentation] for examples and API
 
 ## interface
 
@@ -119,3 +125,6 @@ export function useOptions(defualtValue) {
 // component2.tsx
 const [options, setOptions] = useOptions({ x: 'y' });
 ```
+
+
+[Documentation]: https://deep-foundation.github.io/store/
