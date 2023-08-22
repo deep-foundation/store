@@ -57,7 +57,13 @@ export const LocalStoreProvider = ({
       );
       const [setValue] = useState(() => (value) => {
         debug('setValue', { key, defaultValue: memoDefaultValue, value });
-        const _value = typeof(value) === 'function' ? value(stateRef.current) : value;
+        let current;
+        try {
+          current = JSON.parse(stateRef.current);
+        } catch(error) {
+          current = undefined;
+        }
+        const _value = typeof(value) === 'function' ? value(current) : value;
         const json = stringify(_value);
         localStorage.setItem(key, json);
         _setValue(json);
