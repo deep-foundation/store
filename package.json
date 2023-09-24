@@ -1,6 +1,6 @@
 {
   "name": "@deep-foundation/store",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "license": "Unlicense",
   "author": "Ivan S Glazunov <ivansglazunov@gmail.com>",
   "homepage": "https://github.com/deep-foundation/store",
@@ -11,9 +11,7 @@
   "description": "",
   "dependencies": {
     "debug": "^4.1.1",
-    "lodash": "^4.17.19",
-    "react-cookie": "^4.0.3",
-    "universal-cookie": "^4.0.3"
+    "lodash": "^4.17.19"
   },
   "scripts": {
     "package:build": "npx tsc --project tsconfig.json",
@@ -31,10 +29,12 @@
     "typescript": "^5.0.4"
   },
   "peerDependencies": {
+    "react-cookie": "^4.0.3",
     "@capacitor/core": "^5.0.0",
     "@capacitor/preferences": "^5.0.0",
     "next": "*",
     "react": "*",
-    "react-dom": "*"
+    "react-dom": "*",
+    "universal-cookie": "^4.0.3"
   }
 }
