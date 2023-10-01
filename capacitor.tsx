@@ -4,7 +4,7 @@ import { isEqual, isNull } from 'lodash';
 import { Preferences } from '@capacitor/preferences';
 import Debug from 'debug';
 
-import { IStoreContext, defaultContext, useStore } from './store';
+import { IStoreContext, defaultContext, useStore } from './store'; // I assume this import is correct based on your initial code
 
 const debug = Debug('store:capacitor');
 
@@ -25,11 +25,12 @@ export const CapacitorStoreProvider = ({
     return function useStore<T extends any>(
       key: string,
       defaultValue: T,
-    ): [T, (value: T) => any, () => any] {
+    ): ReturnType<IStoreContext['useStore']>  {
       const getStateRef = useRef<any>();
       const intervalRef = useRef<any>();
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [state, setState] = useState<T>(memoDefaultValue);
+      const [isLoading, setIsLoading] = useState<boolean>(true);
 
       const stateRef = useRef<any>();
       stateRef.current = state;
@@ -40,11 +41,13 @@ export const CapacitorStoreProvider = ({
         Preferences.set({ key, value: JSON.stringify(_value) }).then(() => setState(_value));
         capacitorStorageEvent.emit(key, JSON.stringify(_value));
       });
+      
       const [unsetValue] = useState(() => () => {
         debug('unsetValue', { key, defaultValue: memoDefaultValue });
         Preferences.remove({ key }).then(() => setState(memoDefaultValue));
         capacitorStorageEvent.emit(key, memoDefaultValue);
       });
+      
       getStateRef.current = () => Preferences.get({ key }).then(async ({ value }) => {
         const { keys } = await Preferences.keys();
         if (!!~keys.indexOf(key)) {
@@ -61,10 +64,11 @@ export const CapacitorStoreProvider = ({
           }
         }
       });
+      
       useEffect(
         () => {
           debug('init', { key, defaultValue: memoDefaultValue });
-          getStateRef.current();
+          getStateRef.current().then(() => setIsLoading(false));
           const fn = (value) => {
             let valueParsed;
             try {
@@ -84,7 +88,9 @@ export const CapacitorStoreProvider = ({
         },
         [],
       );
-      return [state, setValue, unsetValue];
+      return {
+        value: state, setValue, unsetValue, isLoading
+      };
     };
   });
 

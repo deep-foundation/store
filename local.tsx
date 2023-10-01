@@ -27,7 +27,7 @@ export const LocalStoreProvider = ({
     return function useStore<T extends any>(
       key: string,
       defaultValue: T,
-    ): [T, (value: T) => any, () => any] {
+    ): ReturnType<IStoreContext['useStore']> {
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [value, _setValue] = useState<string>(typeof(localStorage) === 'undefined' ? stringify(memoDefaultValue) : (localStorage.hasOwnProperty(key) ? localStorage.getItem(key) : stringify(memoDefaultValue)));
 
@@ -81,7 +81,11 @@ export const LocalStoreProvider = ({
           return undefined;
         }
       }, [value]);
-      return [_value, setValue, unsetValue];
+      return {
+        value: _value, 
+        setValue: setValue, 
+        unsetValue: unsetValue
+      };
     };
   });
 

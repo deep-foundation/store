@@ -43,7 +43,7 @@ export const CookiesStoreProviderCore = ({
     return function useStore<T>(
       key: string,
       defaultValue: T,
-    ): [T, (value: T) => any, () => any] {
+    ): ReturnType<IStoreContext['useStore']> {
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [cookie, setCookie, removeCookie] = useCookies([key]);
 
@@ -65,7 +65,11 @@ export const CookiesStoreProviderCore = ({
       } catch (error) {
         debug('setStore:error', { error, key, defaultValue: memoDefaultValue, defaultCookie: defaultCookies[key] });
       }
-      return [(cookie?.[key] && cookie?.[key]?.value) || (defaultCookies && defaultCookie) || memoDefaultValue, setValue, unsetValue];
+      return {
+        value: (cookie?.[key] && cookie?.[key]?.value) || (defaultCookies && defaultCookie) || memoDefaultValue,
+        setValue: setValue,
+        unsetValue: unsetValue,
+      };
     };
   });
   return <context.Provider value={{ useStore }}>

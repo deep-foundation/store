@@ -62,7 +62,7 @@ export const QueryStoreProvider = ({
     function useStore<T extends any>(
       key: string,
       defaultValue: T,
-    ): [T, (value: T) => any, () => any] {
+    ): ReturnType<IStoreContext['useStore']> {
       const [state, setState] = useState(_getDefaultValue.current(key, defaultValue));
 
       const stateRef = useRef<any>();
@@ -118,7 +118,11 @@ export const QueryStoreProvider = ({
         }
       });
 
-      return [state, setValue, unsetValue];
+      return {
+        value: state, 
+        setValue: setValue, 
+        unsetValue: unsetValue
+      };
     };
     return { useStore };
   });

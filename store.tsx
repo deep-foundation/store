@@ -5,7 +5,12 @@ export interface IUseStoreSetHandler<T> {
 };
 
 export interface IUseStore <T>{
-  (key: string, defaultValue: T): [T, (value: (T | IUseStoreSetHandler<T>)) => any, () => any];
+  (key: string, defaultValue: T): {
+    value: T;
+    setValue: (value: (T | IUseStoreSetHandler<T>)) => any
+    unsetValue: () => any;
+    isLoading?: boolean|undefined;
+  };
 }
 
 export interface IStoreContext<T = any> {
@@ -13,7 +18,12 @@ export interface IStoreContext<T = any> {
 }
 
 export const defaultContext: IStoreContext = {
-  useStore: (key, defaultValue) => [defaultValue, value => undefined, () => undefined],
+  useStore: (key, defaultValue) => ({
+    value: defaultValue, 
+    setValue: value => undefined, 
+    unsetValue: () => undefined,
+    isLoading: undefined
+  }),
 };
 
 export const StoreContext = createContext<IStoreContext>(defaultContext);
@@ -24,7 +34,7 @@ export function useStore<T>(
   key: string,
   defaultValue: T,
   context: Context<IStoreContext> = StoreContext,
-): [T, (value: T) => T, () => T] {
+): ReturnType<IStoreContext['useStore']> {
   const { useStore } = useContext(context);
   return useStore(key, defaultValue);
 }
