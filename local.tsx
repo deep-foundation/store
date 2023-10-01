@@ -3,7 +3,7 @@ import { EventEmitter } from 'events';
 import { isNull } from 'lodash';
 import Debug from 'debug';
 
-import { IStoreContext, defaultContext, useStore } from './store';
+import { IStoreContext, IUseStore, defaultContext, useStore } from './store';
 
 const debug = Debug('store:local');
 
@@ -27,7 +27,7 @@ export const LocalStoreProvider = ({
     return function useStore<T extends any>(
       key: string,
       defaultValue: T,
-    ): [T, (value: T) => any, () => any] {
+    ): ReturnType<IUseStore<T>> {
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [value, _setValue] = useState<string>(typeof(localStorage) === 'undefined' ? stringify(memoDefaultValue) : (localStorage.hasOwnProperty(key) ? localStorage.getItem(key) : stringify(memoDefaultValue)));
 
@@ -81,7 +81,7 @@ export const LocalStoreProvider = ({
           return undefined;
         }
       }, [value]);
-      return [_value, setValue, unsetValue];
+      return [_value, setValue, unsetValue, false];
     };
   });
 

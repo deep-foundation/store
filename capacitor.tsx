@@ -4,7 +4,7 @@ import { isEqual, isNull } from 'lodash';
 import { Preferences } from '@capacitor/preferences';
 import Debug from 'debug';
 
-import { IStoreContext, defaultContext, useStore } from './store';
+import { IStoreContext, IUseStore, defaultContext, useStore } from './store';
 
 const debug = Debug('store:capacitor');
 
@@ -25,11 +25,12 @@ export const CapacitorStoreProvider = ({
     return function useStore<T extends any>(
       key: string,
       defaultValue: T,
-    ): [T, (value: T) => any, () => any] {
+    ): ReturnType<IUseStore<T>> {
       const getStateRef = useRef<any>();
       const intervalRef = useRef<any>();
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [state, setState] = useState<T>(memoDefaultValue);
+      const [isLoading, setIsLoading] = useState<boolean>(true);
 
       const stateRef = useRef<any>();
       stateRef.current = state;
@@ -64,7 +65,7 @@ export const CapacitorStoreProvider = ({
       useEffect(
         () => {
           debug('init', { key, defaultValue: memoDefaultValue });
-          getStateRef.current();
+          getStateRef.current().then(() => setIsLoading(false));
           const fn = (value) => {
             let valueParsed;
             try {
@@ -84,7 +85,7 @@ export const CapacitorStoreProvider = ({
         },
         [],
       );
-      return [state, setValue, unsetValue];
+      return [state, setValue, unsetValue, isLoading];
     };
   });
 

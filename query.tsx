@@ -4,7 +4,7 @@ import Debug from 'debug';
 import _ from 'lodash';
 import { EventEmitter } from 'events';
 
-import { IStoreContext, defaultContext, useStore } from './store';
+import { IStoreContext, IUseStore, defaultContext, useStore } from './store';
 
 const debug = Debug('store:use-store-query');
 const capacitorStorageEvent = new EventEmitter();
@@ -62,7 +62,7 @@ export const QueryStoreProvider = ({
     function useStore<T extends any>(
       key: string,
       defaultValue: T,
-    ): [T, (value: T) => any, () => any] {
+    ): ReturnType<IUseStore<T>> {
       const [state, setState] = useState(_getDefaultValue.current(key, defaultValue));
 
       const stateRef = useRef<any>();
@@ -118,7 +118,7 @@ export const QueryStoreProvider = ({
         }
       });
 
-      return [state, setValue, unsetValue];
+      return [state, setValue, unsetValue, false];
     };
     return { useStore };
   });

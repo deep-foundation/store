@@ -3,7 +3,7 @@ import { useCookies, CookiesProvider } from 'react-cookie';
 import Cookies, { Cookie, CookieSetOptions } from 'universal-cookie';
 import Debug from 'debug';
 
-import { IStoreContext, defaultContext, useStore } from './store';
+import { IStoreContext, IUseStore, defaultContext, useStore } from './store';
 
 const debug = Debug('store:cookie');
 
@@ -43,7 +43,7 @@ export const CookiesStoreProviderCore = ({
     return function useStore<T>(
       key: string,
       defaultValue: T,
-    ): [T, (value: T) => any, () => any] {
+    ): ReturnType<IUseStore<T>> {
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [cookie, setCookie, removeCookie] = useCookies([key]);
 
@@ -65,7 +65,7 @@ export const CookiesStoreProviderCore = ({
       } catch (error) {
         debug('setStore:error', { error, key, defaultValue: memoDefaultValue, defaultCookie: defaultCookies[key] });
       }
-      return [(cookie?.[key] && cookie?.[key]?.value) || (defaultCookies && defaultCookie) || memoDefaultValue, setValue, unsetValue];
+      return [(cookie?.[key] && cookie?.[key]?.value) || (defaultCookies && defaultCookie) || memoDefaultValue, setValue, unsetValue, false];
     };
   });
   return <context.Provider value={{ useStore }}>
