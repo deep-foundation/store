@@ -9,7 +9,7 @@ export interface IUseStore <T>{
     value: T;
     setValue: (value: (T | IUseStoreSetHandler<T>)) => any
     unsetValue: () => any;
-    isLoading: boolean|undefined;
+    isLoading?: boolean|undefined;
   };
 }
 

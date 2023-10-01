@@ -30,7 +30,7 @@ export const CapacitorStoreProvider = ({
       const intervalRef = useRef<any>();
       const memoDefaultValue = useMemo(() => defaultValue, []);
       const [state, setState] = useState<T>(memoDefaultValue);
-      const [isLoading, setIsLoading] = useState(true);
+      const [isLoading, setIsLoading] = useState<boolean>(true);
 
       const stateRef = useRef<any>();
       stateRef.current = state;
