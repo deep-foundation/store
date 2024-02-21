@@ -94,6 +94,22 @@ export const CapacitorStoreProvider = ({
   </context.Provider>;
 };
 
+/**
+ * A hook to use a capacitor store (capacitor/preferences)
+ * 
+ * @example
+ * ```
+ * // Wrap your component with CapacitorStoreProvider to use useCapacitorStore hook.
+ * <CapacitorStoreProvider>
+ *   <MyComponent />
+ * </CapacitorStoreProvider>
+ * 
+ * function MyComponent() {
+ *   const [value, setValue, unsetValue, isLoading] = useCapacitorStore('key', 'defaultValue');
+ *   return <div>{value}</div>;
+ * }
+ * ```
+ */
 export function useCapacitorStore<T extends any>(key: string, defaultValue: T, context = CapacitorStoreContext) {
   return useStore(key, defaultValue, context);
 }
