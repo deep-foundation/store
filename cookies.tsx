@@ -73,6 +73,22 @@ export const CookiesStoreProviderCore = ({
   </context.Provider>;
 };
 
+/**
+ * A hook to use a cookie store
+ * 
+ * @example
+ * ```
+ * // Wrap your component with CookiesStoreProvider to use useCookiesStore hook.
+ * <CookiesStoreProvider>
+ *   <MyComponent />
+ * </CookiesStoreProvider>
+ * 
+ * function MyComponent() {
+ *   const [value, setValue, unsetValue, isLoading] = useCookiesStore('key', 'defaultValue');
+ *   return <div>{value}</div>;
+ * }
+ * ```
+ */
 export function useCookiesStore<T extends any>(key: string, defaultValue: T, context = CookiesStoreContext) {
   return useStore(key, defaultValue, context);
 }
