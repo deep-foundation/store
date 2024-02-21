@@ -95,6 +95,11 @@ export const LocalStoreProvider = ({
  * 
  * @example
  * ```
+ * // Wrap your component with LocalStoreProvider to use useLocalStore hook.
+ * <LocalStoreProvider>
+ *   <MyComponent />
+ * </LocalStoreProvider>
+ * 
  * function MyComponent() {
  *   const [value, setValue, unsetValue, isLoading] = useLocalStore('key', 'defaultValue');
  *   return <div>{value}</div>;
