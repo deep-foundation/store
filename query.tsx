@@ -128,6 +128,22 @@ export const QueryStoreProvider = ({
   </context.Provider>;
 };
 
+/**
+ * A hook to use a react-state-based store
+ * 
+ * @example
+ * ```
+ * // Wrap your component with QueryStoreProvider to use useQueryStore hook.
+ * <QueryStoreProvider>
+ *   <MyComponent />
+ * </QueryStoreProvider>
+ * 
+ * function MyComponent() {
+ *   const [value, setValue, unsetValue, isLoading] = useQueryStore('key', 'defaultValue');
+ *   return <div>{value}</div>;
+ * }
+ * ```
+ */
 export function useQueryStore<T extends any>(key: string, defaultValue: T, context = QueryStoreContext) {
   return useStore(key, defaultValue, context);
 }
