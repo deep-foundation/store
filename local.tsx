@@ -90,6 +90,22 @@ export const LocalStoreProvider = ({
   </context.Provider>;
 };
 
+/**
+ * A custom React hook to use the local store
+ * 
+ * @example
+ * ```
+ * // Wrap your component with LocalStoreProvider to use useLocalStore hook.
+ * <LocalStoreProvider>
+ *   <MyComponent />
+ * </LocalStoreProvider>
+ * 
+ * function MyComponent() {
+ *   const [value, setValue, unsetValue, isLoading] = useLocalStore('key', 'defaultValue');
+ *   return <div>{value}</div>;
+ * }
+ * ```
+ */
 export function useLocalStore<T extends any>(key: string, defaultValue: T, context = LocalContext) {
   return useStore(key, defaultValue, context);
 }
