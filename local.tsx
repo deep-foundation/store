@@ -1,6 +1,6 @@
 import React, { Context, ReactNode, useState, createContext, useEffect, useMemo, useRef } from 'react';
 import { EventEmitter } from 'events';
-import { isNull } from 'lodash';
+import isNull from 'lodash/isNull';
 import Debug from 'debug';
 
 import { IStoreContext, IUseStore, defaultContext, useStore } from './store';

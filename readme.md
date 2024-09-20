@@ -36,7 +36,7 @@ import { CapacitorStoreProvider, useCapacitorStore } from '@deep-foundation/stor
 ```
 
 ```tsx
-<QueryStoreProvider>
+<QueryStoreProvider useRouter={useRouter}>
   <CookiesStoreProvider>
     <LocalStoreProvider>
       <CapacitorStoreProvider

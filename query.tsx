@@ -1,7 +1,6 @@
-import { useRouter } from 'next/router';
 import React, { Context, ReactNode, useState, createContext, useRef, useEffect, useMemo, useCallback } from 'react';
 import Debug from 'debug';
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { EventEmitter } from 'events';
 
 import { IStoreContext, IUseStore, defaultContext, useStore } from './store';
@@ -16,9 +15,11 @@ export const fakeRouter: any = {};
 
 export const QueryStoreProvider = ({
   context = QueryStoreContext,
+  useRouter,
   children,
 }: {
   context?: Context<IStoreContext>;
+  useRouter: any;
   children?: ReactNode;
 }) => {
   const router = useRouter();
@@ -41,8 +42,11 @@ export const QueryStoreProvider = ({
   };
   useEffect(() => {
     _renderingRef.current = {};
-    _.each(router?.query, (value, key) => {
-      if (!_.isEqual(value, _cacheRef?.current?.[key])) {
+    const keys = Object.keys(router.query);
+    for (let k in keys) {
+      const key = keys[k];
+      const value = router.query[key];
+      if (!isEqual(value, _cacheRef?.current?.[key])) {
         if (value) {
           try {
             if (typeof value !== 'string') throw new Error('value is not string');
@@ -54,7 +58,7 @@ export const QueryStoreProvider = ({
           capacitorStorageEvent.emit(key, undefined);
         }
       }
-    });
+    }
     _cacheRef.current = router?.query;
   }, [router?.query]);
 
@@ -134,7 +138,7 @@ export const QueryStoreProvider = ({
  * @example
  * ```
  * // Wrap your component with QueryStoreProvider to use useQueryStore hook.
- * <QueryStoreProvider>
+ * <QueryStoreProvider useRouter={useRouter}>
  *   <MyComponent />
  * </QueryStoreProvider>
  * 
